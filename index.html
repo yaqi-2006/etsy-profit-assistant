@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Etsy Profit Assistant · Local demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">∑</span>
+      <div>
+        <p class="eyebrow">LOCAL ANALYSIS / DEMO V0.1</p>
+        <h1>Etsy Profit Assistant</h1>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="chip chip-trust"><span class="trust-indicator" aria-hidden="true"></span>No account · No upload · Memory only</span>
+      <button id="export-full" class="btn btn-secondary" disabled>Export full report</button>
+      <button id="export-report" class="btn btn-secondary" disabled>Orders CSV</button>
+      <button id="clear-data" class="btn btn-danger" disabled>Clear session data</button>
+    </div>
+  </header>
+
+  <nav class="subnav" aria-label="Workbench sections">
+    <div class="subnav-inner">
+      <span class="subnav-title">Navigate:</span>
+      <div id="subnav-generic" class="subnav-group">
+        <a href="#integrity-section" class="subnav-link">Overview &amp; KPIs</a>
+        <a href="#orders-section" class="subnav-link">Order Contribution</a>
+        <a href="#period-section" class="subnav-link">Period Categories</a>
+        <a href="#bridge-section" class="subnav-link">Source Bridge</a>
+        <a href="#audit-section" class="subnav-link">Audit Trail</a>
+      </div>
+      <div id="subnav-native" class="subnav-group hidden">
+        <a href="#native-view" class="subnav-link">Statement Overview</a>
+        <a href="#native-categories-section" class="subnav-link">Categories</a>
+        <a href="#native-rows-section" class="subnav-link">Source Rows</a>
+      </div>
+      <a href="#import-panel" class="subnav-link">Import Data</a>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">CHECK INPUTS FIRST</p>
+        <h2>Where did the money go?</h2>
+        <p>Separate seller revenue, direct fees, and order costs. Missing costs are not zero, payouts are not profit, and unmatched fees stay separate.</p>
+      </div>
+      <div class="hero-meta">
+        <span class="chip">USD only</span>
+        <span class="chip">Not affiliated with Etsy</span>
+        <span class="chip">Not a tax report</span>
+      </div>
+    </section>
+
+    <div class="notice notice-warning banner-card" id="banner-notice">
+      <span class="notice-icon" aria-hidden="true">!</span>
+      <div class="banner-body">
+        <div class="banner-title-line">
+          <strong id="dataset-warning">Synthetic demo data, not your shop's results.</strong>
+          <span class="banner-pill">Local sandbox</span>
+        </div>
+        <p class="banner-subtext">Calculations execute locally in your browser memory. Missing cost items are kept unknown, never defaulted to zero.</p>
+        <details class="disclosure">
+          <summary class="disclosure-summary">
+            <span>Accounting methodology &amp; scope limits</span>
+            <span class="disclosure-chevron" aria-hidden="true">›</span>
+          </summary>
+          <div class="disclosure-content">
+            <p>The English/USD 8-column monthly-statement profile is tested with synthetic files against a public historical format, not real shop exports. Multi-shop, mixed-currency, SKU cost models, and automatic Etsy sync are not supported. Without verified coverage, do not treat results as reconciled or final net profit. Order contribution isolates direct order economics; it intentionally excludes shared period advertising, overhead, and income tax.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="workspace-grid">
+      <aside class="sidebar">
+        <section class="panel" id="data-panel">
+          <div class="panel-head">
+            <p class="eyebrow">01 / DATA</p>
+            <h2>Start with a small sample</h2>
+            <p>Try the synthetic example first, then a redacted file you choose.</p>
+          </div>
+          <div class="actions actions-stack">
+            <button id="load-demo" class="btn btn-primary btn-block">Load synthetic demo</button>
+            <button id="load-etsy-demo" class="btn btn-secondary btn-block">Try Etsy-format sample</button>
+          </div>
+          <div class="template-actions">
+            <button id="download-template" class="btn-link">Download generic CSV template</button>
+            <span class="link-bullet" aria-hidden="true">·</span>
+            <button id="download-etsy-template" class="btn-link">Download synthetic Etsy CSV</button>
+          </div>
+          <div class="dataset-badge-wrap">
+            <p id="dataset-label" class="muted">No data loaded</p>
+          </div>
+          <details class="import-details" id="import-panel">
+            <summary>Import CSV</summary>
+            <label class="field">CSV format
+              <select id="import-format">
+                <option value="auto">Auto-detect</option>
+                <option value="etsy">Etsy monthly statement · English / USD</option>
+                <option value="generic">Generic event CSV</option>
+              </select>
+            </label>
+            <div class="import-guidance">
+              <p class="muted">An English/USD Etsy monthly statement can be read without manual column mapping. Its Net is kept unchanged, with no second fee deduction. Other Etsy export types are not supported. Generic events still use manual mapping. UTF-8; up to 2 MB / 5,000 rows. Do not include buyer details.</p>
+            </div>
+            <div class="field">
+              <span>Choose a local file</span>
+              <input id="csv-file" type="file" accept=".csv,text/csv" hidden>
+              <button id="choose-file" type="button" class="btn btn-secondary">Choose CSV file</button>
+              <small id="file-name" aria-live="polite">No file selected</small>
+            </div>
+            <label class="field">Or paste CSV
+              <textarea id="csv-text" placeholder="event_id,date,type,amount,order_id,currency" spellcheck="false"></textarea>
+            </label>
+            <div class="actions">
+              <button id="preview-csv" class="btn btn-secondary">Read CSV and preview format</button>
+            </div>
+            <div id="mapping-area" class="hidden">
+              <p id="csv-preview" class="muted"></p>
+              <div id="mapping-fields" class="mapping-grid"></div>
+              <label class="checkbox-label" id="invert-label">
+                <input type="checkbox" id="invert-signs">
+                <span>Revenue is negative and fees positive in my file (reverse all signs)</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="confirm-import">
+                <span id="confirm-import-label">I checked event types and signs. This is one ledger, with no double-counting of net totals and itemized entries.</span>
+              </label>
+              <p id="import-method-note" class="muted">Generic events deduplicate by stable ID. Native statements replace the entire session, never append; no stable native row ID is assumed. Unknown types stay visible.</p>
+              <button id="commit-csv" class="btn btn-primary">Confirm and append events</button>
+            </div>
+          </details>
+        </section>
+
+        <section class="panel" id="range-panel">
+          <div class="panel-head">
+            <p class="eyebrow">02 / DATE RANGE</p>
+            <h2>Period and as-of date</h2>
+          </div>
+          <form id="period-form" class="period-form">
+            <label class="field">Start date<input id="start-date" type="date" required value="2026-10-01"></label>
+            <label class="field">End date<input id="end-date" type="date" required value="2026-10-31"></label>
+            <label class="field">As-of date<input id="asof-date" type="date" required value="2026-10-31"></label>
+            <button class="btn btn-secondary" type="submit">Update range</button>
+          </form>
+          <p class="muted">Orders use their earliest sale date and include known adjustments through the as-of date. Period events use their posting date and exclude manually entered product costs.</p>
+        </section>
+
+        <section class="panel" id="privacy-panel">
+          <div class="panel-head">
+            <p class="eyebrow">03 / PRIVACY &amp; LIMITS</p>
+            <h2>Data stays in this session</h2>
+          </div>
+          <p class="muted">No server-side analysis, telemetry, or default storage. Data is held in memory and cleared on refresh or close. Reports export only when you choose; clearing also removes this session's cost inputs.</p>
+          <p class="muted">Exports are not backups; analysis sessions cannot be restored. Do not enter real sensitive data in this unvalidated demo.</p>
+        </section>
+      </aside>
+
+      <div class="main-panel">
+        <section class="panel hidden" id="native-view" aria-labelledby="native-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">ETSY MONTHLY STATEMENT / SOURCE NET ONLY</p>
+              <h2 id="native-title">Understand your account activity</h2>
+              <p id="native-meta" class="muted"></p>
+            </div>
+          </div>
+          <div class="notice notice-warning banner-card">
+            <span class="notice-icon" aria-hidden="true">!</span>
+            <div class="banner-body">
+              <div class="banner-title-line">
+                <strong>Each known source Net is counted once. Missing Net stays unknown; arithmetic differences are flagged, not overwritten.</strong>
+              </div>
+              <details class="disclosure">
+                <summary class="disclosure-summary">
+                  <span>Statement interpretation rules &amp; boundaries</span>
+                  <span class="disclosure-chevron" aria-hidden="true">›</span>
+                </summary>
+                <div class="disclosure-content">
+                  <p>Sales row net is not seller revenue before fees, and this is not order contribution, available payout or business profit. No order matches are inferred. Statement imports replace this session; duplicate-looking rows within a file are kept.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+          <div id="native-kpis" class="kpi-grid"></div>
+          <div id="native-categories-section" class="section-subblock">
+            <h3>Categories · known signed Net subtotals</h3>
+            <div id="native-categories" class="category-list"></div>
+          </div>
+          <div id="native-rows-section" class="section-subblock">
+            <h3>Source rows · mapped financial fields only</h3>
+            <p class="muted">Title, Info and extra buyer fields are not retained or included in reports. Amount and Fees &amp; Taxes are explanatory only; blanks are unknown, not zero. Arithmetic flags may reflect unitemized tax and do not by themselves prove an Etsy error. The full file is analyzed; up to 100 rows are shown below.</p>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Source type</th>
+                    <th>Category</th>
+                    <th class="numeric">Amount</th>
+                    <th class="numeric">Fees &amp; Taxes</th>
+                    <th class="numeric">Net</th>
+                    <th>Source line</th>
+                  </tr>
+                </thead>
+                <tbody id="native-rows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <div id="generic-view">
+          <section id="integrity-section" class="panel" aria-labelledby="integrity-title">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">INPUT CHECK</p>
+                <h2 id="integrity-title">How complete are the inputs?</h2>
+                <p id="range-label" class="muted">Load data to see the range and sources</p>
+              </div>
+            </div>
+            <div id="kpi-grid" class="kpi-grid"></div>
+            <div id="health-notice" class="notice notice-info">
+              <span>Load the demo to explore complete inputs, missing costs, negative contribution, refunds, and unmatched fees.</span>
+            </div>
+          </section>
+
+          <section id="orders-section" class="panel" aria-labelledby="orders-title">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">ORDER CONTRIBUTION / NOT FINAL NET PROFIT</p>
+                <h2 id="orders-title">Which orders need a closer look?</h2>
+                <p class="muted">Contribution appears only when costs and direct fee scope are confirmed. It excludes shared period expenses, rent, income tax, and other overhead.</p>
+              </div>
+              <label class="field filter-field">
+                <span>Filter orders</span>
+                <select id="order-filter">
+                  <option value="all">All orders</option>
+                  <option value="incomplete">Needs inputs</option>
+                  <option value="negative">Negative contribution</option>
+                  <option value="available">Contribution available</option>
+                </select>
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Order / Date</th>
+                    <th class="numeric">Seller revenue net of refunds</th>
+                    <th class="numeric">Known direct fees</th>
+                    <th>Input status</th>
+                    <th class="numeric">Order contribution</th>
+                    <th>Sources &amp; costs</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-body"></tbody>
+              </table>
+            </div>
+            <p class="footnote">“Known remainder” subtracts only known items; it is not profit with missing costs treated as zero. Details list what is missing. Refunds do not automatically reverse product costs.</p>
+          </section>
+
+          <div class="split-grid">
+            <section id="period-section" class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">PERIOD EVENTS / POSTING DATE</p>
+                  <h2>What makes up this period?</h2>
+                  <p class="muted">Imported events grouped by type, with source amounts unchanged. Without opening and closing balances, account balances cannot be verified.</p>
+                </div>
+              </div>
+              <div id="category-list" class="category-list"></div>
+              <p id="period-summary" class="footnote"></p>
+            </section>
+
+            <section id="bridge-section" class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">MUTUALLY EXCLUSIVE CATEGORIES / SOURCE NET</p>
+                  <h2>Source-net bridge</h2>
+                  <p class="muted">Keep prior-period refunds, shared expenses, items to review, and cash flows outside contribution separate. A matching total does not prove nothing is missing.</p>
+                </div>
+              </div>
+              <div id="bridge-list" class="bridge-list"></div>
+              <p id="bridge-summary" class="footnote"></p>
+            </section>
+          </div>
+
+          <section id="audit-section" class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">TRACE TO SOURCE</p>
+                <h2>Events to review</h2>
+                <p class="muted">Unmatched events, unknown types, cross-period adjustments, and cash flows outside contribution stay here. Only mapped financial fields are shown.</p>
+              </div>
+            </div>
+            <div id="exceptions-list" class="source-list"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footnote shell site-footer">
+    <p>V0.1 local demo · Generic order revenue excludes marketplace-collected tax · Statement Net is not order contribution or business net profit · Demo amounts are not current Etsy fee rates · Costs entered per order; no SKU effective-date model</p>
+  </footer>
+</div>
+
+<dialog id="order-dialog" class="detail-dialog" aria-labelledby="detail-title">
+  <div class="dialog-head">
+    <div>
+      <p class="eyebrow">ORDER SOURCES &amp; COSTS</p>
+      <h2 id="detail-title"></h2>
+    </div>
+    <button id="close-dialog" class="btn btn-secondary close-button" aria-label="Close order details">Close</button>
+  </div>
+  <div id="detail-content"></div>
+  <form id="cost-form" class="cost-form">
+    <div class="cost-form-head">
+      <h3>Add order costs</h3>
+      <p class="muted">Blank means unknown. Enter 0 only when you have confirmed there is no cost. Product cost is the total for this order; you decide which labor and materials it includes.</p>
+    </div>
+    <div class="detail-grid cost-inputs-grid">
+      <label class="field">Total product cost (USD)
+        <input id="cost-goods" type="text" inputmode="decimal" placeholder="Unknown? Leave blank">
+      </label>
+      <label class="field">Actual shipping cost (USD)
+        <input id="cost-shipping" type="text" inputmode="decimal" placeholder="Unknown? Leave blank">
+      </label>
+      <label class="field">Packaging &amp; other direct costs (USD)
+        <input id="cost-packaging" type="text" inputmode="decimal" placeholder="Unknown? Leave blank">
+      </label>
+    </div>
+    <p id="shipping-hint" class="muted shipping-hint-text"></p>
+    <label class="field">Cost basis
+      <select id="cost-quality">
+        <option value="user_entered">Entered from known records</option>
+        <option value="estimated">Estimate (contribution marked estimated)</option>
+      </select>
+    </label>
+    <label class="checkbox-label checkbox-reviewed">
+      <input id="fees-reviewed" type="checkbox">
+      <span>I checked the direct fee scope and confirmed any absent fees do not apply.</span>
+    </label>
+    <p class="muted">Completing costs does not turn estimated events into actual records. Confirmation applies only to this order, not the whole month or file.</p>
+    <div class="actions cost-actions">
+      <button type="submit" class="btn btn-primary">Save session costs and recalculate</button>
+      <button type="button" id="cancel-cost" class="btn btn-secondary">Back to orders</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<script src="core.js"></script>
+<script src="etsy.js"></script>
+<script src="demo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# This project verifies its own integrity with MANIFEST.sha256 (SHA-256 of every
+# tracked file). Any line-ending conversion would invalidate those hashes and
+# change byte content, so all conversion is disabled: files are stored and
+# checked out exactly as they are on disk.
+* -text

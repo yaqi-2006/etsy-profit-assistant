@@ -1,0 +1,42 @@
+Etsy Profit Assistant · English Local Demo v0.1
+
+SCOPE NOTE: this is the release note for the original v0.1 delivery package.
+That package (START-HERE.html, the demo videos, the extension ZIP, the caption file,
+the poster and the synthetic statement CSV) is not included in this source archive.
+The version later published on the demo site uses the CC BY 4.0 background music
+documented in BGM-使用与署名说明.txt.
+
+Start with START-HERE.html. No account or online service is required for the app.
+The captioned demo and the clean version use the same English narration.
+The separate SRT is useful with the clean video; the main demo already has captions.
+Synthetic-Statement.csv contains the exact ten-row monthly sample shown in the video.
+
+Verified locally on Windows in isolated Chrome 149:
+- 76 financial/parser/extension packaging checks passed.
+- 20 offline browser checks passed.
+- 11 real Manifest V3 extension interaction checks passed.
+- 4 focused UI/large-integer regressions passed.
+- Video: 1920x1080, 30 fps, H.264/AAC; complete decode and timed-caption checks passed.
+
+Financial scope:
+- EP-1002: $30.00 revenue - $2.95 fees - $12.00 product cost - $4.50 shipping
+  - $0.50 packaging = $10.05 estimated order contribution.
+- EP-1003: -$2.27 estimated order contribution.
+- Monthly statement: $14.28 KNOWN source Net subtotal; 1 row has missing Net.
+  It is neither order contribution nor a reconciled balance.
+- All demonstrated records are synthetic. This is not tax/accounting advice.
+
+Limitations:
+Real-shop Etsy export compatibility has not been verified. Only the documented
+historical English/USD monthly-statement profile and normalized generic event schema
+are supported. No automatic Etsy sync, no Chrome Web Store listing, no Etsy affiliation.
+Edge installation guidance is provided; Edge extension execution was not tested.
+User inputs are not retained by the app after refresh. Downloaded files remain on disk;
+HTML/CSV reports are not resumable session backups. The app does not provide secure erasure.
+
+Media:
+The v0.1 package used original algorithmically generated music; the published demo
+version uses CC BY 4.0 background music, and its attribution record is
+BGM-使用与署名说明.txt. Narration is synthetic English speech.
+Check applicable voice-service and marketplace rules before external commercial
+distribution. No publication or store submission was performed.

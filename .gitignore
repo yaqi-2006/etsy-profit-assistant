@@ -1,0 +1,17 @@
+# Build outputs (regenerate with `npm run build` / `npm run build:extension`)
+etsy-profit-demo.html
+publish/
+dist-extension/
+dist-extension.zip
+
+# Local verification output
+browser-verification.json
+preview.png
+native-preview.png
+qa/
+tools/browser-profiles/
+.verify-browser-*/
+
+# Node
+node_modules/
+npm-debug.log*

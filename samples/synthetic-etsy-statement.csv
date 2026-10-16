@@ -1,0 +1,9 @@
+Date,Type,Title,Info,Currency,Amount,Fees & Taxes,Net
+2026-10-02,Sale,Entirely fictitious sale,SYNTHETIC buyer placeholder only,USD,54.00,-5.87,48.13
+2026-10-03,Fees,Entirely fictitious fee,SYNTHETIC fee placeholder only,USD,,-3.25,-3.25
+2026-10-04,Shipping,Entirely fictitious label,SYNTHETIC shipping placeholder only,USD,,-6.50,-6.50
+2026-10-05,Synthetic adjustment,Entirely fictitious adjustment,SYNTHETIC unknown placeholder only,USD,1.17,--,1.17
+2026-10-06,Refund,Entirely fictitious refund,SYNTHETIC refund placeholder only,USD,-10.00,0.50,-9.50
+2026-10-07,Fee,Entirely fictitious repeated listing fee,SYNTHETIC repeated placeholder only,USD,,-0.20,-0.20
+2026-10-07,Fee,Entirely fictitious repeated listing fee,SYNTHETIC repeated placeholder only,USD,,-0.20,-0.20
+2026-10-08,Deposit,Entirely fictitious deposit,SYNTHETIC deposit placeholder only,USD,,, -20.00

@@ -1,0 +1,20 @@
+{
+  "name": "etsy-profit-assistant",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": false,
+  "description": "Browser-only Etsy payment-statement and order-cost analyzer. Runs entirely client-side; no account, no upload, no backend. Archived portfolio project - real Etsy export compatibility was never verified.",
+  "keywords": ["etsy", "profit", "csv", "bookkeeping", "client-side", "no-backend"],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node --test core.test.cjs etsy.test.cjs etsy-native-safety.test.cjs extension.test.cjs",
+    "test:browser": "node verify-browser.cjs",
+    "test:extension": "node verify-extension.mjs",
+    "test:ui": "node verify-ui-review.mjs",
+    "build": "node build.cjs",
+    "build:extension": "node build-extension.cjs"
+  }
+}

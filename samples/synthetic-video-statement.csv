@@ -1,0 +1,11 @@
+Date,Type,Title,Info,Currency,Amount,Fees & Taxes,Net
+10/2/26,Sale,Synthetic sale,Synthetic sample only,USD,54.00,-5.87,48.13
+10/2/26,Fee,Synthetic transaction fee,,USD,--,-3.25,-3.25
+10/3/26,Shipping,Synthetic label,,USD,--,-6.50,-6.50
+10/4/26,Marketing,Synthetic ads,,USD,--,-9.00,-9.00
+10/5/26,Refund,Synthetic partial refund,,USD,-10.00,0.50,-9.50
+10/6/26,Tax,Synthetic tax flow,,USD,--,-4.00,-4.00
+10/7/26,Deposit,Synthetic transfer,,USD,--,--,--
+10/8/26,Unrecognized adjustment,Synthetic unknown,,USD,-1.20,--,-1.20
+10/9/26,Fee,Synthetic listing fee,,USD,--,-0.20,-0.20
+10/9/26,Fee,Synthetic listing fee,,USD,--,-0.20,-0.20

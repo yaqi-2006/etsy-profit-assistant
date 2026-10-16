@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-11T14:09:48.151Z",
+  "url": "https://profit-pilot-etsy-demo.netlify.app/",
+  "anonymous": true,
+  "status": 200,
+  "bytes": 101041,
+  "sha256": "4f92f4efe4e8e86fbfcbf9fc06fe346ea820b22d064cce52924037397fa80bba",
+  "reviewedBuildSha256": "3513662b311a92692b4420ff07e4eaf30cf8688b3c283915ce84abadefe7c7ac",
+  "externalScripts": [],
+  "productionVisibility": "public",
+  "plan": "Free",
+  "accountPlanEvidence": "已在账户 Billing 页面核对 Free、$0、300 credits/月、无超额收费",
+  "sourceVersion": "首版构建仅修复两处汇总精度，100715字节；不包含正在改动的本地新界面"
+}
